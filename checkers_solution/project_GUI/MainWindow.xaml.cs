@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using project_logic;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,6 +19,7 @@ namespace project_GUI
     {
         public MainWindow()
         {
+            GameState gameState = new GameState();  
             InitializeComponent();
         }
     }

@@ -8,4 +8,46 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="assets\Board.png" />
+    <None Remove="assets\CursorB.cur" />
+    <None Remove="assets\CursorW.cur" />
+    <None Remove="assets\icon.ico" />
+    <None Remove="assets\PawnB.png" />
+    <None Remove="assets\PawnW.png" />
+    <None Remove="assets\QueenB.png" />
+    <None Remove="assets\QueenW.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\project_logic\project_logic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\Board.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\CursorB.cur">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\CursorW.cur">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\icon.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\PawnB.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\PawnW.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\QueenB.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\QueenW.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>

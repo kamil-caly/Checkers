@@ -1,0 +1,19 @@
+Checkers
+1) Ruchy
+  - Rozpoczyna gracz grający białymi.
+  - Pionki ruszają się 1 pole do przodu.
+  - Pionki nie mogą ruszać się do tyłu.
+  - Damka może ruszać się zarówno do przodu jak i do tyłu o dowolną ilość pól.
+  - Gdy dojdziemy pionem do końca planszy następuję wymiana go na damke.
+
+2) Bicie 
+  - Bicie odbywa się poprzez przeskoczenie piona przeciwnika na kolejne pole tylko wtedy gdy       jest ono puste (oczywiście po przekątnej tak jak ruchy).
+  - Gdy jest możliwość wielokrotnego bicia, należy wybrać najbardziej korzystne (damka liczy       się jak zwykły pion), czyli te dające najwięcej pionów (gdy jest po równo gracz może           wybrać). Damka podobnie musi zawsze zbić najwięcej pionów.
+  - Można bić do tyłu.
+  - Bicie jest obowiązkowe.
+  - Gdy podczas bicia pion przejdzie przez końcową linię ale się na niej nie zatrzyma to nie       staję się damką.
+
+3) Koniec gry
+  - 2 opcje
+    -> Gra kończy się gdy dany gracz zbije wszystkie piony przeciwnika.
+    -> Gra kończy się gdy dany gracz nie może wykonać już żadnego ruchu.
