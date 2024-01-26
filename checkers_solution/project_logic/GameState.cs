@@ -1,9 +1,11 @@
-﻿namespace project_logic
+﻿using project_logic.Moves;
+
+namespace project_logic
 {
     public class GameState
     {
         private BoardField [,] GameBoard;
-        private Player CurrentPlayer;
+        public Player CurrentPlayer { get; private set; }
         public GameState()
         {
             CurrentPlayer = Player.White;
@@ -24,28 +26,28 @@
                     {
                         if (r % 2 == 0 && c % 2 != 0)
                         {
-                            setBoardField(r, c, FieldContent.Pawn, Player.Black);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
                         }
                         else if (r == 1 && c % 2 == 0)
                         {
-                            setBoardField(r, c, FieldContent.Pawn, Player.Black);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
                         }
                     }
                     else if (r >= 5)
                     {
                         if (r % 2 != 0 && c % 2 == 0)
                         {
-                            setBoardField(r, c, FieldContent.Pawn, Player.White);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                         else if (r == 6 && c % 2 != 0)
                         {
-                            setBoardField(r, c, FieldContent.Pawn, Player.White);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                     }
 
-                    if (GetBoardField(r, c) == null)
+                    if (GetBoardField(new Position(r, c)) == null)
                     {
-                        setBoardField(r, c, FieldContent.None);
+                        setBoardField(new Position(r, c), FieldContent.None);
                     }
                 }
             }
@@ -53,14 +55,43 @@
             return GameBoard;
         }
 
-        public BoardField GetBoardField(int r, int c)
+        public BoardField GetBoardField(Position pos)
         {
-            return GameBoard[r, c];
+            return GameBoard[pos.row, pos.col];
         }
 
-        public void setBoardField(int r, int c, FieldContent content, Player? player = null)
+        public void setBoardField(Position pos, FieldContent content, Player? player = null)
         {
-            GameBoard[r, c] = new BoardField(content, player);
-        } 
+            GameBoard[pos.row, pos.col] = new BoardField(content, player);
+        }
+
+        public bool IsFieldEmpty(Position pos)
+        {
+            return IsOnBoard(pos) && GameBoard[pos.row, pos.col].Content == FieldContent.None;
+        }
+
+        public bool IsOnBoard(Position pos)
+        {
+            return pos.row <= 7 && pos.row >= 0 && pos.col <= 7 && pos.col >= 0;
+        }
+
+        public bool IsPawnHere(Position pos, Player color)
+        {
+            return !IsFieldEmpty(pos) && 
+                GetBoardField(pos).Player == color && 
+                GetBoardField(pos).Content == FieldContent.Pawn;
+        }
+
+        public bool IsLadyHere(Position pos, Player color)
+        {
+            return !IsFieldEmpty(pos) &&
+                GetBoardField(pos).Player == color &&
+                GetBoardField(pos).Content == FieldContent.Lady;
+        }
+
+        public void SwitchPlayer()
+        {
+            CurrentPlayer = CurrentPlayer == Player.White ? Player.Black : Player.White;
+        }
     }
 }

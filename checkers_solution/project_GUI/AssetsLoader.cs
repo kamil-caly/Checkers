@@ -6,20 +6,20 @@ namespace project_GUI
 {
     public static class AssetsLoader
     {
-        private const string pawnBlackUrl = "assets/PawnB.png";
-        private const string pawnWhiteUrl = "assets/PawnW.png";
+        private const string PawnBlackUrl = "assets/PawnB.png";
+        private const string PawnWhiteUrl = "assets/PawnW.png";
         private const string LadyBlackUrl = "assets/QueenB.png";
         private const string LadyWhiteUrl = "assets/QueenW.png";
 
         private readonly static Dictionary<FieldContent, string> whitePieces = new()
         {
-            { FieldContent.Pawn, pawnWhiteUrl },
+            { FieldContent.Pawn, PawnWhiteUrl },
             { FieldContent.Lady, LadyWhiteUrl }
         };
 
         private readonly static Dictionary<FieldContent, string> blackPieces = new()
         {
-            { FieldContent.Pawn, pawnBlackUrl },
+            { FieldContent.Pawn, PawnBlackUrl },
             { FieldContent.Lady, LadyBlackUrl }
         };
 

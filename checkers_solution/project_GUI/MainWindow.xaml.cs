@@ -1,14 +1,8 @@
 ﻿using project_logic;
-using System.Text;
+using project_logic.Moves;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace project_GUI
 {
@@ -20,11 +14,27 @@ namespace project_GUI
         private const int _rows = 8;
         private const int _cols = 8;
         private readonly GameState _gameState;
+        private Image[,] _imgBoard = new Image[_rows, _cols]; 
         public MainWindow()
         { 
             InitializeComponent();
             _gameState = new GameState();
+            InitBoard();
             DrawBoard();
+            var test = new NormalMove(_gameState).GetAllLegalMoves(Player.White);
+        }
+
+        private void InitBoard()
+        {
+            for (int r = 0; r < _rows; r++)
+            {
+                for (int c = 0; c < _cols; c++)
+                {
+                    Image img = new Image();
+                    PieceGrid.Children.Add(img);
+                    _imgBoard[r, c] = img;
+                }
+            }
         }
 
         private void DrawBoard()
@@ -33,15 +43,15 @@ namespace project_GUI
             {
                 for (int c = 0; c < _cols; c++)
                 {
-                    Image img = new Image();
-                    PieceGrid.Children.Add(img);
-
-                    BoardField boardField = _gameState.GetBoardField(r, c);
+                    BoardField boardField = _gameState.GetBoardField(new Position(r,c));
                     if (boardField.Player == null)
+                    {
+                        _imgBoard[r, c].Source = new Image().Source;
                         continue;
-
+                    }
+                        
                     ImageSource imgSource = AssetsLoader.GetImage(boardField.Content, (Player)boardField.Player);
-                    img.Source = imgSource;
+                    _imgBoard[r, c].Source = imgSource;
                 }
             }
         }
