@@ -14,7 +14,7 @@
         {
             List<Move> moves = new List<Move>();
 
-            for (int r = 2; r < rows; r++)
+            for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < cols; c++)
                 {
@@ -40,6 +40,17 @@
             return moves;
         }
 
+        public void MakeMove(Position from, Position to)
+        {
+            BoardField movedPiece = gameState.GetBoardField(new Position(from.row, from.col));
+            
+            gameState.setBoardField(new Position(from.row, from.col), FieldContent.None);
+
+            gameState.setBoardField(new Position(to.row, to.col), movedPiece.Content, movedPiece.Player);
+
+            gameState.SwitchPlayer();
+        }
+
         private Move? GetMovesForPawn(Position fromPos, Player color) 
         {
             List<Position> toPos = new List<Position>();    
@@ -59,7 +70,7 @@
             {
                 for (int c = -1; c < 2; c += 2)
                 {
-                    // right-up, right-up
+                    // left-down, right-down
                     if (gameState.IsFieldEmpty(new Position(fromPos.row + 1, fromPos.col + c)))
                     {
                         toPos.Add(new Position(fromPos.row + 1, fromPos.col + c));
@@ -70,7 +81,6 @@
             return toPos.Count == 0 ? null : new Move(fromPos, toPos);
         }
 
-        // TODO: zwracać tylko ruchy gdy posTo.Count nie jest 0
         private Move? GetMovesForLady(Position fromMove)
         {
             List<Position> toMoves =

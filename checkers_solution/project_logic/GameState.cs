@@ -1,4 +1,5 @@
 ﻿using project_logic.Moves;
+using System.Drawing;
 
 namespace project_logic
 {
@@ -73,6 +74,18 @@ namespace project_logic
         public bool IsOnBoard(Position pos)
         {
             return pos.row <= 7 && pos.row >= 0 && pos.col <= 7 && pos.col >= 0;
+        }
+
+        public bool IsWhiteHere(Position pos)
+        {
+            return !IsFieldEmpty(pos) &&
+                GetBoardField(pos).Player == Player.White;
+        }
+
+        public bool IsBlackHere(Position pos)
+        {
+            return !IsFieldEmpty(pos) &&
+                GetBoardField(pos).Player == Player.Black;
         }
 
         public bool IsPawnHere(Position pos, Player color)

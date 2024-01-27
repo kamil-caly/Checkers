@@ -12,7 +12,8 @@
     <Viewbox>
         <Grid x:Name="BoardGrid"
               Width="600"
-              Height="600">
+              Height="600"
+              MouseLeftButtonDown="BoardGrid_Click">
             <Grid.Background>
                 <ImageBrush ImageSource="assets/Board.png" />
             </Grid.Background>
