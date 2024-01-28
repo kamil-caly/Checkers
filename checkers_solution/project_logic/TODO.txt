@@ -1,8 +1,8 @@
 TODO:
 1) Generowanie planszy. ✔
-2) Logika do pobierania wszystkich możliwych ruchów (pionki + damki).✔
-3) Obsługa podstawowych ruchów po stronie gui.
-4) Podświelanie pól na planszy pokazujących możliwe ruchy + piony którymi można ruch wykonać.
+2) Logika do pobierania wszystkich możliwych ruchów (pionki + damki). ✔
+3) Obsługa podstawowych ruchów po stronie gui. ✔
+4) Podświelanie pól na planszy pokazujących możliwe ruchy + piony którymi można ruch wykonać (ewentualnie w przyszłości). 
 5) Logika bicia pionami.
 6) Logika bicia damkami.
 7) Obsługa końca gry.

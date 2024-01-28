@@ -31,6 +31,7 @@ namespace project_GUI
             DrawCacheBoard(new List<Position>());
 
             //var test = new NormalMove(_gameState).GetAllLegalMoves(Player.White);
+            var test2 = new BeatingMove(_gameState).GetAllLegalMoves(Player.White);
         }
 
         private void InitBoards()
@@ -110,7 +111,7 @@ namespace project_GUI
 
         private void ShowMovesForClickedPiece(Position clickedField)
         {
-            List<Move>? moves = _normalMove.GetAllLegalMoves(_gameState.CurrentPlayer)?.ToList();
+            List<NMove>? moves = _normalMove.GetAllLegalMoves(_gameState.CurrentPlayer)?.ToList();
 
             if(moves != null)
             {

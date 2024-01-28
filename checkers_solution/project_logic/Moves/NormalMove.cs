@@ -2,7 +2,7 @@
 {
     public class NormalMove
     {
-        private GameState gameState;
+        private readonly GameState gameState;
         private const int rows = 8;
         private const int cols = 8;
         public NormalMove(GameState gameState)
@@ -10,9 +10,9 @@
             this.gameState = gameState;
         }
 
-        public IEnumerable<Move>? GetAllLegalMoves(Player color)
+        public IEnumerable<NMove>? GetAllLegalMoves(Player color)
         {
-            List<Move> moves = new List<Move>();
+            List<NMove> moves = new List<NMove>();
 
             for (int r = 0; r < rows; r++)
             {
@@ -20,7 +20,7 @@
                 {
                     if (gameState.IsPawnHere(new Position(r, c), color))
                     {
-                        Move? currPawnMove = GetMovesForPawn(new Position(r, c), color);
+                        NMove? currPawnMove = GetMovesForPawn(new Position(r, c), color);
                         if(currPawnMove != null)
                         {
                             moves.Add(currPawnMove);
@@ -28,7 +28,7 @@
                     }
                     else if (gameState.IsLadyHere(new Position(r, c), color))
                     {
-                        Move? currLadyMove = GetMovesForLady(new Position(r, c));
+                        NMove? currLadyMove = GetMovesForLady(new Position(r, c));
                         if (currLadyMove != null)
                         {
                             moves.Add(currLadyMove);
@@ -51,7 +51,7 @@
             gameState.SwitchPlayer();
         }
 
-        private Move? GetMovesForPawn(Position fromPos, Player color) 
+        private NMove? GetMovesForPawn(Position fromPos, Player color) 
         {
             List<Position> toPos = new List<Position>();    
 
@@ -78,10 +78,10 @@
                 }
             }
 
-            return toPos.Count == 0 ? null : new Move(fromPos, toPos);
+            return toPos.Count == 0 ? null : new NMove(fromPos, toPos);
         }
 
-        private Move? GetMovesForLady(Position fromMove)
+        private NMove? GetMovesForLady(Position fromMove)
         {
             List<Position> toMoves =
             [
@@ -95,7 +95,7 @@
                 .. GetLadyDiagonalPositionsTo(fromMove, 1, -1),
             ];
 
-            return toMoves.Count == 0 ? null : new Move(fromMove, toMoves);
+            return toMoves.Count == 0 ? null : new NMove(fromMove, toMoves);
         }
 
         private List<Position> GetLadyDiagonalPositionsTo(Position pos, int vertical, int horizontal)
