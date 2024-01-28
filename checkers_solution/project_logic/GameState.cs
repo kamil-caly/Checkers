@@ -20,15 +20,22 @@ namespace project_logic
             GameBoard = new BoardField[rows, cols];
 
             // dla testu
-            setBoardField(new Position(4, 1), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(4, 3), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(2, 3), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(2, 5), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(2, 1), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(4, 1), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(4, 3), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(2, 3), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(2, 5), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(2, 1), FieldContent.Pawn, Player.Black);
 
             // dla testu
-            setBoardField(new Position(5, 0), FieldContent.Pawn, Player.White);
+            setBoardField(new Position(3, 2), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(2, 5), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(5, 2), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(6, 5), FieldContent.Pawn, Player.Black);
+
+            // dla testu
+            setBoardField(new Position(5, 0), FieldContent.Lady, Player.White);
 
             for (int r = 0; r < rows; r++)
             {
@@ -153,24 +160,24 @@ namespace project_logic
             CurrentPlayer = CurrentPlayer == Player.White ? Player.Black : Player.White;
         }
 
-        public bool CanPawnBeatPeace(Position from, Position peaceToBeat)
+        public bool CanPeaceBeatPeace(Position from, Position peaceToBeat)
         {
             if (!IsPeaceHere(peaceToBeat))
             {
                 return false;
             }
 
-            int fromRow = from.row; //0
+            int fromRow = from.row; //2
             int fromCol = from.col; //1
 
-            int toRow = peaceToBeat.row; //1
-            int toCol = peaceToBeat.col; //2
+            int toRow = peaceToBeat.row; //5
+            int toCol = peaceToBeat.col; //4
 
-            int vValue = toRow - fromRow; //1
-            int hValue = toCol - fromCol; //1
+            int vValue = toRow > fromRow ? 1 : -1; //1
+            int hValue = toCol > fromCol ? 1 : -1; //1
 
-            if ((IsWhiteHere(from) && IsWhiteHere(peaceToBeat)) || 
-                (IsBlackHere(from) && IsBlackHere(peaceToBeat))) 
+            if ((IsWhiteHere(from) && IsWhiteHere(peaceToBeat)) ||
+                (IsBlackHere(from) && IsBlackHere(peaceToBeat)))
             {
                 return false;
             }
