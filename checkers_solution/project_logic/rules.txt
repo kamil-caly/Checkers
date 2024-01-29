@@ -7,8 +7,13 @@ Checkers
   - Gdy dojdziemy pionem do końca planszy następuję wymiana go na damke.
 
 2) Bicie 
-  - Bicie odbywa się poprzez przeskoczenie piona przeciwnika na kolejne pole tylko wtedy gdy       jest ono puste (oczywiście po przekątnej tak jak ruchy).
-  - Gdy jest możliwość wielokrotnego bicia, należy wybrać najbardziej korzystne (damka liczy       się jak zwykły pion), czyli te dające najwięcej pionów (gdy jest po równo gracz może           wybrać). Damka podobnie musi zawsze zbić najwięcej pionów.
+  - Bicie odbywa się poprzez przeskoczenie piona przeciwnika na kolejne pole tylko wtedy gdy       
+    jest ono puste (oczywiście po przekątnej tak jak ruchy).
+  - Gdy jest możliwość wielokrotnego bicia, należy wybrać najbardziej korzystne (damka liczy       
+    się jak zwykły pion), czyli te dające najwięcej pionów (gdy jest po równo gracz może wybrać). 
+    Damka podobnie musi zawsze zbić najwięcej pionów.
+  - W przypadku bicia takiej samej ilości pionów i dojścia na dane pole co najmniej dwiema
+    różnymi drogami, wybierana jest losowo jedna z nich (w przypadku damki ma ona znaczenie).
   - Można bić do tyłu.
   - Bicie jest obowiązkowe.
   - Gdy podczas bicia pion przejdzie przez końcową linię ale się na niej nie zatrzyma to nie       staję się damką.

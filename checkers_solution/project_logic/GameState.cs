@@ -20,22 +20,24 @@ namespace project_logic
             GameBoard = new BoardField[rows, cols];
 
             // dla testu
-            //setBoardField(new Position(4, 1), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(4, 3), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(2, 3), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(2, 5), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(2, 1), FieldContent.Pawn, Player.Black);
-
-            // dla testu
-            setBoardField(new Position(3, 2), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(2, 5), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(4, 1), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(4, 3), FieldContent.Pawn, Player.Black);
             setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(5, 2), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(6, 5), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(2, 3), FieldContent.Pawn, Player.Black);
+            setBoardField(new Position(2, 5), FieldContent.Lady, Player.Black);
+            setBoardField(new Position(2, 1), FieldContent.Pawn, Player.Black);
+
+            setBoardField(new Position(5, 0), FieldContent.Pawn, Player.White);
 
             // dla testu
-            setBoardField(new Position(5, 0), FieldContent.Lady, Player.White);
+            //setBoardField(new Position(3, 2), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(2, 5), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(5, 2), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(6, 5), FieldContent.Pawn, Player.Black);
+
+            // dla testu
+            //setBoardField(new Position(5, 0), FieldContent.Lady, Player.White);
 
             for (int r = 0; r < rows; r++)
             {
@@ -76,26 +78,6 @@ namespace project_logic
             }
 
             return GameBoard;
-        }
-
-        public BoardField[,] CopyBoard()
-        {
-            BoardField[,] copyBoard = new BoardField[rows, cols];
-
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    copyBoard[r, c] = GameBoard[r, c];
-                }
-            }
-
-            return copyBoard;
-        }
-
-        public void UseBoard(BoardField[,] board)
-        {
-            GameBoard = board;
         }
 
         public BoardField GetBoardField(Position pos)
