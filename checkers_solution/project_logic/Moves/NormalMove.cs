@@ -10,7 +10,7 @@
             this.gameState = gameState;
         }
 
-        public IEnumerable<NMove>? GetAllLegalMoves(Player color)
+        public IEnumerable<NMove> GetAllLegalMoves(Player color)
         {
             List<NMove> moves = new List<NMove>();
 
@@ -48,7 +48,18 @@
 
             gameState.setBoardField(new Position(to.row, to.col), movedPiece.Content, movedPiece.Player);
 
+            if (gameState.IsPlayerOnPromotionLine(to) && gameState.IsPawnHere(to))
+            {
+                ReplaceInLady(to);
+            }
+
             gameState.SwitchPlayer();
+        }
+
+        private void ReplaceInLady(Position pos)
+        {
+            Player color = gameState.IsWhiteHere(pos) ? Player.White : Player.Black;
+            gameState.setBoardField(new Position(pos.row, pos.col), FieldContent.Lady, color);
         }
 
         private NMove? GetMovesForPawn(Position fromPos, Player color) 

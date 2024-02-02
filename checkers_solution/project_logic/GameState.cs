@@ -19,26 +19,6 @@ namespace project_logic
         {
             GameBoard = new BoardField[rows, cols];
 
-            // dla testu
-            setBoardField(new Position(4, 1), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(4, 3), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(2, 3), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(2, 5), FieldContent.Lady, Player.Black);
-            setBoardField(new Position(2, 1), FieldContent.Pawn, Player.Black);
-
-            setBoardField(new Position(5, 0), FieldContent.Pawn, Player.White);
-
-            // dla testu
-            //setBoardField(new Position(3, 2), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(2, 5), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(5, 2), FieldContent.Pawn, Player.Black);
-            //setBoardField(new Position(6, 5), FieldContent.Pawn, Player.Black);
-
-            // dla testu
-            //setBoardField(new Position(5, 0), FieldContent.Lady, Player.White);
-
             for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < cols; c++)
@@ -47,26 +27,22 @@ namespace project_logic
                     {
                         if (r % 2 == 0 && c % 2 != 0)
                         {
-                            // dla testu
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
                         }
                         else if (r == 1 && c % 2 == 0)
                         {
-                            // dla testu
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
                         }
                     }
                     else if (r >= 5)
                     {
                         if (r % 2 != 0 && c % 2 == 0)
                         {
-                            // dla testu
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                         else if (r == 6 && c % 2 != 0)
                         {
-                            // dla testu
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                     }
 
@@ -123,6 +99,12 @@ namespace project_logic
                 GetBoardField(pos).Player == Player.Black;
         }
 
+        public bool IsPawnHere(Position pos)
+        {
+            return !IsFieldEmpty(pos) &&
+                GetBoardField(pos).Content == FieldContent.Pawn;
+        }
+
         public bool IsPawnHere(Position pos, Player color)
         {
             return !IsFieldEmpty(pos) && 
@@ -137,12 +119,22 @@ namespace project_logic
                 GetBoardField(pos).Content == FieldContent.Lady;
         }
 
+        public bool IsPlayerOnPromotionLine(Position pos)
+        {
+            if (CurrentPlayer == Player.White)
+            {
+                return pos.row == 0;
+            }
+
+            return pos.row == 7;
+        }
+
         public void SwitchPlayer()
         {
             CurrentPlayer = CurrentPlayer == Player.White ? Player.Black : Player.White;
         }
 
-        public bool CanPeaceBeatPeace(Position from, Position peaceToBeat)
+        public bool CanPeaceBeatPeace(Position from, Position peaceToBeat, Player color)
         {
             if (!IsPeaceHere(peaceToBeat))
             {
@@ -158,8 +150,7 @@ namespace project_logic
             int vValue = toRow > fromRow ? 1 : -1; //1
             int hValue = toCol > fromCol ? 1 : -1; //1
 
-            if ((IsWhiteHere(from) && IsWhiteHere(peaceToBeat)) ||
-                (IsBlackHere(from) && IsBlackHere(peaceToBeat)))
+            if (color == Player.White ? IsWhiteHere(peaceToBeat) : IsBlackHere(peaceToBeat))
             {
                 return false;
             }

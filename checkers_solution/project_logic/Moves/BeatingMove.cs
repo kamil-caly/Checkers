@@ -18,7 +18,7 @@ namespace project_logic.Moves
             this.gameState = gameState;
         }
 
-        public IEnumerable<BMove>? GetAllLegalMoves(Player color)
+        public IEnumerable<BMove> GetAllLegalMoves(Player color)
         {
             List<BMove> moves = new List<BMove>();
 
@@ -28,7 +28,7 @@ namespace project_logic.Moves
                 {
                     if (gameState.IsPawnHere(new Position(r, c), color))
                     {
-                        List<BMove>? currPawnMoves = GetMovesForPawn(new Position(r, c));
+                        List<BMove>? currPawnMoves = GetMovesForPawn(new Position(r, c), color);
                         if (currPawnMoves != null)
                         {
                             moves.AddRange(currPawnMoves);
@@ -36,7 +36,7 @@ namespace project_logic.Moves
                     }
                     else if (gameState.IsLadyHere(new Position(r, c), color))
                     {
-                        List<BMove>? currLadyMove = GetMovesForLady(new Position(r, c));
+                        List<BMove>? currLadyMove = GetMovesForLady(new Position(r, c), color);
                         if (currLadyMove != null)
                         {
                             moves.AddRange(currLadyMove);
@@ -48,13 +48,63 @@ namespace project_logic.Moves
             return moves;
         }
 
-        private List<BMove>? GetMovesForPawn(Position pos)
+        public BMove? GetLegalMoveForPeace(Position from, Position to, Player color)
+        {
+            if (gameState.IsPawnHere(new Position(from.row, from.col), color))
+            {
+                List<BMove>? currPawnMoves = GetMovesForPawn(new Position(from.row, from.col), color);
+                if (currPawnMoves != null)
+                {
+                    return currPawnMoves.Where(b => b.To.row == to.row && b.To.col == to.col).FirstOrDefault();
+                }
+            }
+            else if (gameState.IsLadyHere(new Position(from.row, from.col), color))
+            {
+                List<BMove>? currLadyMove = GetMovesForLady(new Position(from.row, from.col), color);
+                if (currLadyMove != null)
+                {
+                    return currLadyMove.Where(b => b.To.row == to.row && b.To.col == to.col).FirstOrDefault();
+                }
+            }
+
+            return null;
+        }
+
+        public void MakeMove(BMove bMove)
+        {
+            BoardField movedPiece = gameState.GetBoardField(new Position(bMove.From.row, bMove.From.col));
+
+            gameState.setBoardField(new Position(bMove.From.row, bMove.From.col), FieldContent.None);
+
+            foreach (var peace in bMove.BeatingPeacesPos)
+            {
+                gameState.setBoardField(new Position(peace.row, peace.col), FieldContent.None);
+            }
+
+            gameState.setBoardField(new Position(bMove.To.row, bMove.To.col), movedPiece.Content, movedPiece.Player);
+
+            if (gameState.IsPlayerOnPromotionLine(bMove.To) && gameState.IsPawnHere(bMove.To))
+            {
+                ReplaceInLady(bMove.To);
+            }
+
+            gameState.SwitchPlayer();
+        }
+
+        private void ReplaceInLady(Position pos)
+        {
+            Player color = gameState.IsWhiteHere(pos) ? Player.White : Player.Black;
+            gameState.setBoardField(new Position(pos.row, pos.col), FieldContent.Lady, color);
+        }
+
+
+        private List<BMove>? GetMovesForPawn(Position pos, Player color)
         {
             List<BMove> bMoves = new List<BMove>();
 
             tempBMoves = new List<BMove>();
 
-            FindMovesForPawnAlgorithm(pos, pos, new List<BeatedPeace>());
+            FindMovesForPawnAlgorithm(pos, pos, new List<BeatedPeace>(), color);
 
             if (tempBMoves.Count() > 0)
             {
@@ -76,7 +126,7 @@ namespace project_logic.Moves
             return bMoves;
         }
 
-        private void FindMovesForPawnAlgorithm(Position fromPos, Position toPos, List<BeatedPeace> beatedPieces)
+        private void FindMovesForPawnAlgorithm(Position fromPos, Position toPos, List<BeatedPeace> beatedPieces, Player color)
         {
             // right up ->   -1, 1
             // right down -> 1, 1
@@ -86,12 +136,12 @@ namespace project_logic.Moves
             {
                 for (int h = -1; h < 2; h += 2)
                 {
-                    if (gameState.CanPeaceBeatPeace(toPos, new Position(toPos.row + v, toPos.col + h)))
+                    if (gameState.CanPeaceBeatPeace(toPos, new Position(toPos.row + v, toPos.col + h), color))
                     {
                         BoardField beatedPeaceField = gameState.GetBoardField(new Position(toPos.row + v, toPos.col + h));
                         gameState.setBoardField(new Position(toPos.row + v, toPos.col + h), FieldContent.None);
                         beatedPieces.Add(new BeatedPeace(new Position(toPos.row + v, toPos.col + h), beatedPeaceField));
-                        FindMovesForPawnAlgorithm(fromPos, new Position(toPos.row + (2 * v), toPos.col + (2 * h)), beatedPieces);
+                        FindMovesForPawnAlgorithm(fromPos, new Position(toPos.row + (2 * v), toPos.col + (2 * h)), beatedPieces, color);
                     }
                 }
             }
@@ -115,13 +165,13 @@ namespace project_logic.Moves
             return;
         }
 
-        private List<BMove>? GetMovesForLady(Position pos)
+        private List<BMove>? GetMovesForLady(Position pos, Player color)
         {
             List<BMove> bMoves = new List<BMove>();
 
             tempBMoves = new List<BMove>();
 
-            FindMovesForLadyAlgorithm(pos, pos, new List<BeatedPeace>());
+            FindMovesForLadyAlgorithm(pos, pos, new List<BeatedPeace>(), color);
 
             if (tempBMoves.Count() > 0)
             {
@@ -142,7 +192,7 @@ namespace project_logic.Moves
             return bMoves;
         }
 
-        private void FindMovesForLadyAlgorithm(Position fromPos, Position toPos, List<BeatedPeace> beatedPieces)
+        private void FindMovesForLadyAlgorithm(Position fromPos, Position toPos, List<BeatedPeace> beatedPieces, Player color)
         {
             bool isDiagonalLineChecked = false;
 
@@ -163,7 +213,7 @@ namespace project_logic.Moves
                             break;
                         }
 
-                        if (gameState.CanPeaceBeatPeace(toPos, new Position(toPos.row + r, toPos.col + c)))
+                        if (gameState.CanPeaceBeatPeace(toPos, new Position(toPos.row + r, toPos.col + c), color))
                         {
                             BoardField beatedPeaceField = gameState.GetBoardField(new Position(toPos.row + r, toPos.col + c));
                             gameState.setBoardField(new Position(toPos.row + r, toPos.col + c), FieldContent.None);
@@ -180,7 +230,7 @@ namespace project_logic.Moves
                                     break;
                                 }
 
-                                FindMovesForLadyAlgorithm(fromPos, new Position(toPos.row + r + rr, toPos.col + c + cc), beatedPieces);
+                                FindMovesForLadyAlgorithm(fromPos, new Position(toPos.row + r + rr, toPos.col + c + cc), beatedPieces, color);
 
                                 rr += v;
                                 cc += h;
