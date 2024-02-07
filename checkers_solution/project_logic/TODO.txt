@@ -10,3 +10,4 @@ TODO:
 9) Popup po wciśnięciu 'Esc' (wyjście/kontynuuj). ✔
 10) Inny kolor dla ruchów bijących. ✔
 11) Zamiana piona na damkę po dojściu do końca planszy. ✔
+12) Odpowiedni kursor myszy w zależności od aktualnego gracza.

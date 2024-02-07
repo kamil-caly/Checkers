@@ -157,5 +157,22 @@ namespace project_logic
 
             return IsFieldEmpty(new Position(toRow + vValue, toCol + hValue));
         }
+
+        public bool IsPlayerOnBoard(Player color)
+        {
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    if (IsPeaceHere(new Position(r, c), color))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
     }
 }
