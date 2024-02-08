@@ -205,6 +205,10 @@ namespace project_GUI
                 DrawCacheBoard();
                 _normalMove.MakeMove(_prevClickedPiece, clickedField);
                 DrawBoard();
+                if (GameOverManager.IsGameOverFMR())
+                {
+                    ShowGameOverMenu(GameOverReason.FifteenLadiesMoves, null);
+                }
             }
         }
 
@@ -215,7 +219,7 @@ namespace project_GUI
                 DrawCacheBoard();
                 _beatingMove.MakeMove(bMove);
                 DrawBoard();
-                if (GameOver.IsGameOver(_gameState))
+                if (GameOverManager.IsGameOver(_gameState))
                 {
                     ShowGameOverMenu(GameOverReason.CapturedPieces, _gameState.GetNextPlayer());
                 }

@@ -1,4 +1,6 @@
-﻿namespace project_logic.Moves
+﻿using project_logic.GameOver;
+
+namespace project_logic.Moves
 {
     public class NormalMove
     {
@@ -43,6 +45,16 @@
         public void MakeMove(Position from, Position to)
         {
             BoardField movedPiece = gameState.GetBoardField(new Position(from.row, from.col));
+
+            // To fifty move rule check
+            if (movedPiece.Content == FieldContent.Lady)
+            {
+                GameOverManager.IncrementLadyMoves((Player)movedPiece.Player!);
+            }
+            else
+            {
+                GameOverManager.ResetLadyMoves((Player)movedPiece.Player!);
+            }
             
             gameState.setBoardField(new Position(from.row, from.col), FieldContent.None);
 

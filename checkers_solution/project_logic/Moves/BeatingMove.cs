@@ -1,4 +1,5 @@
-﻿using System;
+﻿using project_logic.GameOver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,6 +74,11 @@ namespace project_logic.Moves
         public void MakeMove(BMove bMove)
         {
             BoardField movedPiece = gameState.GetBoardField(new Position(bMove.From.row, bMove.From.col));
+
+            if (movedPiece.Content == FieldContent.Lady)
+            {
+                GameOverManager.ResetLadyMoves((Player)movedPiece.Player!);
+            }
 
             gameState.setBoardField(new Position(bMove.From.row, bMove.From.col), FieldContent.None);
 
