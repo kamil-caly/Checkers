@@ -140,7 +140,25 @@ namespace project_GUI
                 {
                     ExecuteNMove(new Position(clickedRow, clickedCol));
                 }
+
+                if (!IsAnyMoveForPlayer(_gameState.GetNextPlayer()))
+                {
+                    ShowGameOverMenu(GameOverReason.CannotMovePieces, _gameState.CurrentPlayer);
+                }
+
+                if (!IsAnyMoveForPlayer(_gameState.CurrentPlayer))
+                {
+                    ShowGameOverMenu(GameOverReason.CannotMovePieces, _gameState.GetNextPlayer());
+                }
             }
+        }
+
+        private bool IsAnyMoveForPlayer(Player player)
+        {
+            List<BMove> bMoves = _beatingMove.GetAllLegalMoves(player).ToList();
+            List<NMove> nMoves = _normalMove.GetAllLegalMoves(player).ToList();
+
+            return bMoves.Count() > 0 || nMoves.Count() > 0;
         }
 
         private void ShowMovesForClickedPiece(Position clickedField)
@@ -245,7 +263,12 @@ namespace project_GUI
         }
 
         private void ShowGameOverMenu(GameOverReason reason, Player? winner)
-        {         
+        {   
+            if (Menu.Content != null)
+            {
+                return;
+            }
+
             GameOverMenu gameOverMenu = new GameOverMenu(reason, winner);
             Menu.Content = gameOverMenu;
 
