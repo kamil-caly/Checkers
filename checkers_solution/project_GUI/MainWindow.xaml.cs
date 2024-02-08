@@ -1,4 +1,5 @@
 ﻿using project_logic;
+using project_logic.GameOver;
 using project_logic.Moves;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,11 +19,11 @@ namespace project_GUI
         private readonly Color _greenTpLight = Color.FromArgb(100, 125, 255, 125); // normal move mark
         private readonly Color _yellowTp = Color.FromArgb(150, 255, 255, 0); // beating move
         private readonly Color _yellowTpLight = Color.FromArgb(100, 255, 255, 0); // beating move mark
-        private readonly GameState _gameState;
+        private GameState _gameState;
         private Image[,] _imgBoard = new Image[_rows, _cols];
         private Rectangle[,] _cacheBoard = new Rectangle[_rows, _cols];
-        private readonly NormalMove _normalMove;
-        private readonly BeatingMove _beatingMove;
+        private NormalMove _normalMove;
+        private BeatingMove _beatingMove;
         private Position? _prevClickedPiece = null;
         public MainWindow()
         { 
@@ -40,6 +41,9 @@ namespace project_GUI
 
         private void InitBoards()
         {
+            PieceGrid.Children.Clear();
+            CacheGrid.Children.Clear();
+
             for (int r = 0; r < _rows; r++)
             {
                 for (int c = 0; c < _cols; c++)
@@ -193,6 +197,10 @@ namespace project_GUI
                 DrawCacheBoard();
                 _beatingMove.MakeMove(bMove);
                 DrawBoard();
+                if (GameOver.IsGameOver(_gameState))
+                {
+                    ShowGameOverMenu(GameOverReason.CapturedPieces, _gameState.GetNextPlayer());
+                }
             }
         }
 
@@ -217,7 +225,7 @@ namespace project_GUI
                             return;
                         }
 
-                        PauseMenu_QuitClicked();
+                        QuitClicked();
                     };
                 }
             }
@@ -231,9 +239,37 @@ namespace project_GUI
             }
         }
 
-        private void PauseMenu_QuitClicked()
+        private void QuitClicked()
         {
             Application.Current.Shutdown();
+        }
+
+        private void ShowGameOverMenu(GameOverReason reason, Player? winner)
+        {         
+            GameOverMenu gameOverMenu = new GameOverMenu(reason, winner);
+            Menu.Content = gameOverMenu;
+
+            gameOverMenu.ClickedAction += option =>
+            {
+                if (option == GameOverAction.Restart)
+                {
+                    RestartGame();
+                    return;
+                }
+
+                QuitClicked();
+            };
+        }
+
+        private void RestartGame()
+        {
+            Menu.Content = null;
+            _gameState = new GameState();
+            _normalMove = new NormalMove(_gameState);
+            _beatingMove = new BeatingMove(_gameState);
+            InitBoards();
+            DrawBoard();
+            DrawCacheBoard(new List<Position>());
         }
     }
 }

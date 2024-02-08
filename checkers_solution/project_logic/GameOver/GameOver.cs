@@ -8,6 +8,9 @@ namespace project_logic.GameOver
 {
     public static class GameOver
     {
-
+        public static bool IsGameOver(GameState gameState)
+        {
+            return !gameState.IsPlayerOnBoard(gameState.CurrentPlayer);
+        }
     }
 }
