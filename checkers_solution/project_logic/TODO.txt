@@ -5,7 +5,7 @@ TODO:
 4) Pionek podświetla się po kliknięciu jeśli można nim wykonać ruch. ✔
 5) Logika bicia pionami. ✔
 6) Logika bicia damkami. ✔
-7) Obsługa końca gry.
+7) Obsługa końca gry. ✔
 8) Popup podczas końca gry (wyjście/restart). ✔
 9) Popup po wciśnięciu 'Esc' (wyjście/kontynuuj). ✔
 10) Inny kolor dla ruchów bijących. ✔

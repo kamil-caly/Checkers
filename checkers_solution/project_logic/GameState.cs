@@ -19,11 +19,6 @@ namespace project_logic
         {
             GameBoard = new BoardField[rows, cols];
 
-            setBoardField(new Position(6, 7), FieldContent.Pawn, Player.White);
-            setBoardField(new Position(6, 5), FieldContent.Pawn, Player.White);
-            setBoardField(new Position(0, 7), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(0, 5), FieldContent.Pawn, Player.Black);
-
             for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < cols; c++)
@@ -32,7 +27,7 @@ namespace project_logic
                     {
                         if (r % 2 == 0 && c % 2 != 0)
                         {
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
                         }
                         else if (r == 1 && c % 2 == 0)
                         {
@@ -43,7 +38,7 @@ namespace project_logic
                     {
                         if (r % 2 != 0 && c % 2 == 0)
                         {
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                         else if (r == 6 && c % 2 != 0)
                         {

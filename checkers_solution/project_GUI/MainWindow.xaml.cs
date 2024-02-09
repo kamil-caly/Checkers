@@ -34,9 +34,7 @@ namespace project_GUI
             InitBoards();
             DrawBoard();
             DrawCacheBoard(new List<Position>());
-
-            //var test = new NormalMove(_gameState).GetAllLegalMoves(Player.White);
-            //var test2 = new BeatingMove(_gameState).GetAllLegalMoves(Player.White);
+            SetCursor();
         }
 
         private void InitBoards()
@@ -145,10 +143,13 @@ namespace project_GUI
                 {
                     ShowGameOverMenu(GameOverReason.CannotMovePieces, _gameState.CurrentPlayer);
                 }
-
-                if (!IsAnyMoveForPlayer(_gameState.CurrentPlayer))
+                else if (!IsAnyMoveForPlayer(_gameState.CurrentPlayer))
                 {
                     ShowGameOverMenu(GameOverReason.CannotMovePieces, _gameState.GetNextPlayer());
+                }
+                else
+                {
+                    SetCursor();
                 }
             }
         }
@@ -297,6 +298,12 @@ namespace project_GUI
             InitBoards();
             DrawBoard();
             DrawCacheBoard(new List<Position>());
+            SetCursor();
+        }
+
+        private void SetCursor()
+        {
+            Cursor = MouseCursor.GetCursor(_gameState.CurrentPlayer);
         }
     }
 }

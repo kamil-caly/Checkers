@@ -46,7 +46,7 @@ namespace project_logic.Moves
                 }
             }
 
-            return moves;
+            return GetOnlyBestMoves(moves, true);
         }
 
         public BMove? GetLegalMoveForPeace(Position from, Position to, Player color)
@@ -103,6 +103,30 @@ namespace project_logic.Moves
             gameState.setBoardField(new Position(pos.row, pos.col), FieldContent.Lady, color);
         }
 
+        private List<BMove> GetOnlyBestMoves(List<BMove> bMoves, bool isForAllPeaces = false)
+        {
+            if (bMoves.Count <= 0)
+            {
+                return bMoves;
+            }
+
+            // wybieramy tylko te ruchy, które biją najwięcej pionów
+            bMoves = bMoves.OrderByDescending(b => b.BeatingPeacesPos.Count()).ToList();
+            int bestOption = bMoves.First().BeatingPeacesPos.Count();
+            bMoves = bMoves.Where(b => b.BeatingPeacesPos.Count() == bestOption).ToList();
+
+            if (!isForAllPeaces)
+            {
+                // w przypadku ruchu piona na to samo pole co najmniej dwiema różnymi drogami,
+                // wybierana jest losowo jedna z nich
+                Random rand = new Random();
+                bMoves = bMoves.OrderBy(x => rand.Next()).ToList();
+                bMoves = bMoves.GroupBy(b => new { b.To.row, b.To.col }).Select(g => g.First()).ToList();
+            }
+            
+            return bMoves;
+        }
+
 
         private List<BMove>? GetMovesForPawn(Position pos, Player color)
         {
@@ -117,16 +141,7 @@ namespace project_logic.Moves
                 bMoves.AddRange(tempBMoves);
                 tempBMoves.Clear();
 
-                // wybieramy tylko te ruchy, które biją najwięcej pionów
-                bMoves = bMoves.OrderByDescending(b => b.BeatingPeacesPos.Count()).ToList();
-                int bestOption = bMoves.First().BeatingPeacesPos.Count();
-                bMoves = bMoves.Where(b => b.BeatingPeacesPos.Count() == bestOption).ToList();
-
-                // w przypadku ruchu na to samo pole co najmniej dwiema różnymi drogami, wybierana jest losowo jedna z nich
-                Random rand = new Random();
-                bMoves = bMoves.OrderBy(x => rand.Next()).ToList();
-                bMoves = bMoves.GroupBy(b => new { b.To.row, b.To.col }).Select(g => g.First()).ToList();
-
+                bMoves = GetOnlyBestMoves(bMoves);
             }
 
             return bMoves;
@@ -184,15 +199,7 @@ namespace project_logic.Moves
                 bMoves.AddRange(tempBMoves);
                 tempBMoves.Clear();
 
-                // wybieramy tylko te ruchy, które biją najwięcej pionów
-                bMoves = bMoves.OrderByDescending(b => b.BeatingPeacesPos.Count()).ToList();
-                int bestOption = bMoves.First().BeatingPeacesPos.Count();
-                bMoves = bMoves.Where(b => b.BeatingPeacesPos.Count() == bestOption).ToList();
-
-                // w przypadku ruchu na to samo pole co najmniej dwiema różnymi drogami, wybierana jest losowo jedna z nich
-                Random rand = new Random();
-                bMoves = bMoves.OrderBy(x => rand.Next()).ToList();
-                bMoves = bMoves.GroupBy(b => new { b.To.row, b.To.col }).Select(g => g.First()).ToList();
+                bMoves = GetOnlyBestMoves(bMoves);
             }
 
             return bMoves;
