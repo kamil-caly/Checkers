@@ -156,8 +156,17 @@ namespace project_GUI
 
         private bool IsAnyMoveForPlayer(Player player)
         {
+            // Podczas pobierania ruchów z jakiegoś powodu znika pion, który
+            // stoi na diagonali damki, ale tylko w określonych ustawieniu figur.
+            // Jako naprawę przed sprawdzeniem zapisujemy kopię planszy i przywracamy
+            // po sprawdzeniu.
+
+            BoardField[,] copyBoard = _gameState.Copy();
+
             List<BMove> bMoves = _beatingMove.GetAllLegalMoves(player).ToList();
             List<NMove> nMoves = _normalMove.GetAllLegalMoves(player).ToList();
+
+            _gameState.UseBoard(copyBoard);
 
             return bMoves.Count() > 0 || nMoves.Count() > 0;
         }

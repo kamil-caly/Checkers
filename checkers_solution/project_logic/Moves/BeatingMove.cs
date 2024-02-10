@@ -226,7 +226,7 @@ namespace project_logic.Moves
                             break;
                         }
 
-                        if (gameState.CanPeaceBeatPeace(toPos, new Position(toPos.row + r, toPos.col + c), color))
+                        if (gameState.CanPeaceBeatPeace(toPos, new Position(toPos.row + r, toPos.col + c), color, true))
                         {
                             BoardField beatedPeaceField = gameState.GetBoardField(new Position(toPos.row + r, toPos.col + c));
                             gameState.setBoardField(new Position(toPos.row + r, toPos.col + c), FieldContent.None);

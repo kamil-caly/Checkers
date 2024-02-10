@@ -58,6 +58,27 @@ namespace project_logic
             return GameBoard;
         }
 
+        public BoardField[,] Copy()
+        {
+            BoardField[,] copyBoard = new BoardField[rows, cols];
+
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    copyBoard[r, c] = new BoardField(GetBoardField(new Position(r, c)).Content,
+                        GetBoardField(new Position(r, c)).Player);
+                }
+            }
+
+            return copyBoard;
+        }
+
+        public void UseBoard(BoardField[,] newBoard)
+        {
+            GameBoard = newBoard;
+        }
+
         public BoardField GetBoardField(Position pos)
         {
             return GameBoard[pos.row, pos.col];
@@ -146,7 +167,7 @@ namespace project_logic
             CurrentPlayer = CurrentPlayer == Player.White ? Player.Black : Player.White;
         }
 
-        public bool CanPeaceBeatPeace(Position from, Position peaceToBeat, Player currPlayer)
+        public bool CanPeaceBeatPeace(Position from, Position peaceToBeat, Player currPlayer, bool LadyBeats = false)
         {
             if (!IsPeaceHere(peaceToBeat))
             {
@@ -168,7 +189,7 @@ namespace project_logic
             }
 
             // dodatkowe sprawdzenie gdy damka
-            if (IsLadyHere(new Position(from.row, from.col), currPlayer)) 
+            if (LadyBeats) 
             {
                 if (IsPeaceHere(new Position(toRow - vValue, toCol - hValue), GetOppositeColor(currPlayer)))
                 {
