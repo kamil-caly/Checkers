@@ -19,6 +19,8 @@ namespace project_logic
         {
             GameBoard = new BoardField[rows, cols];
 
+            setBoardField(new Position(6, 7), FieldContent.Lady, Player.White);
+
             for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < cols; c++)
@@ -31,14 +33,14 @@ namespace project_logic
                         }
                         else if (r == 1 && c % 2 == 0)
                         {
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.Black);
                         }
                     }
                     else if (r >= 5)
                     {
                         if (r % 2 != 0 && c % 2 == 0)
                         {
-                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
+                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                         else if (r == 6 && c % 2 != 0)
                         {
@@ -69,6 +71,11 @@ namespace project_logic
         public Player GetNextPlayer()
         {
             return CurrentPlayer == Player.White ? Player.Black : Player.White;
+        }
+
+        public Player GetOppositeColor(Player color)
+        {
+            return color == Player.White ? Player.Black : Player.White;
         }
 
         public bool IsFieldEmpty(Position pos)
@@ -139,7 +146,7 @@ namespace project_logic
             CurrentPlayer = CurrentPlayer == Player.White ? Player.Black : Player.White;
         }
 
-        public bool CanPeaceBeatPeace(Position from, Position peaceToBeat, Player color)
+        public bool CanPeaceBeatPeace(Position from, Position peaceToBeat, Player currPlayer)
         {
             if (!IsPeaceHere(peaceToBeat))
             {
@@ -155,9 +162,18 @@ namespace project_logic
             int vValue = toRow > fromRow ? 1 : -1; //1
             int hValue = toCol > fromCol ? 1 : -1; //1
 
-            if (color == Player.White ? IsWhiteHere(peaceToBeat) : IsBlackHere(peaceToBeat))
+            if (currPlayer == Player.White ? IsWhiteHere(peaceToBeat) : IsBlackHere(peaceToBeat))
             {
                 return false;
+            }
+
+            // dodatkowe sprawdzenie gdy damka
+            if (IsLadyHere(new Position(from.row, from.col), currPlayer)) 
+            {
+                if (IsPeaceHere(new Position(toRow - vValue, toCol - hValue), GetOppositeColor(currPlayer)))
+                {
+                    return false;
+                }
             }
 
             return IsFieldEmpty(new Position(toRow + vValue, toCol + hValue));
