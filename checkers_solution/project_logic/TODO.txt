@@ -11,4 +11,5 @@ TODO:
 10) Inny kolor dla ruchów bijących. ✔
 11) Zamiana piona na damkę po dojściu do końca planszy. ✔
 12) Odpowiedni kursor myszy w zależności od aktualnego gracza. ✔
-13) Naprawić bicie damką!
+13) Naprawić bicie damką! ✔
+14) Kolejny błąd do naprawy: damka po biciu w jednym kierunku, zmienia zwrot i bije kolejnego piona. (Pionki biją prawidłowo)

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -123,7 +124,7 @@ namespace project_logic.Moves
                 bMoves = bMoves.OrderBy(x => rand.Next()).ToList();
                 bMoves = bMoves.GroupBy(b => new { b.To.row, b.To.col }).Select(g => g.First()).ToList();
             }
-            
+
             return bMoves;
         }
 
@@ -175,14 +176,14 @@ namespace project_logic.Moves
 
                 gameState.setBoardField(
                     new Position(beatedPieces.Last().pos.row, beatedPieces.Last().pos.col),
-                    beatedPieces.Last().boardField.Content, 
+                    beatedPieces.Last().boardField.Content,
                     beatedPieces.Last().boardField.Player);
 
                 beatedPieces.RemoveAt(beatedPieces.Count() - 1);
 
                 tempBMoves!.Add(bMove);
             }
-            
+
             return;
         }
 
@@ -192,7 +193,13 @@ namespace project_logic.Moves
 
             tempBMoves = new List<BMove>();
 
+            // na potrzeby algorytmu tymczasowo usuwamy damkę, która chce bić
+            BoardField lady = gameState.GetBoardField(new Position(pos.row, pos.col));
+            gameState.setBoardField(new Position(pos.row, pos.col), FieldContent.None);
+
             FindMovesForLadyAlgorithm(pos, pos, new List<BeatedPeace>(), color);
+
+            gameState.setBoardField(new Position(pos.row, pos.col), FieldContent.Lady, color);
 
             if (tempBMoves.Count() > 0)
             {
@@ -205,9 +212,11 @@ namespace project_logic.Moves
             return bMoves;
         }
 
-        private void FindMovesForLadyAlgorithm(Position fromPos, Position toPos, List<BeatedPeace> beatedPieces, Player color)
+        private void FindMovesForLadyAlgorithm(Position fromPos, Position toPos, List<BeatedPeace> beatedPieces, Player color, Position? blockedDir = null)
         {
             bool isDiagonalLineChecked = false;
+
+            Dictionary<(int, int), List<Position>> localBlockedDir = new();
 
             // right up ->   -1, 1
             // right down -> 1, 1
@@ -219,6 +228,37 @@ namespace project_logic.Moves
                 {
                     int r = v;
                     int c = h;
+
+                    if (blockedDir != null && blockedDir.row == v && blockedDir.col == h)
+                    {
+                        continue;
+                    }
+
+                    if (localBlockedDir.ContainsKey((-1 * v, -1 * h)))
+                    {
+                        List<Position> posToDelete = localBlockedDir[(-1 * v, -1 * h)];
+                        List<BeatedPeace> peacesToRemove = new();
+
+                        foreach (var pos in posToDelete)
+                        {
+                            peacesToRemove = beatedPieces
+                                .Where(b => b.pos.row == pos.row && b.pos.col == pos.col)
+                                .ToList();
+                        }
+
+                        foreach (var peaceToRemove in peacesToRemove)
+                        {
+                            gameState.setBoardField(
+                            new Position(peaceToRemove.pos.row, peaceToRemove.pos.col),
+                            peaceToRemove.boardField.Content,
+                            peaceToRemove.boardField.Player);
+
+                            beatedPieces.Remove(peaceToRemove);
+                        }
+
+                        localBlockedDir[(-1 * v, -1 * h)] = new List<Position>();
+                    }
+
                     while (true)
                     {
                         if (!gameState.IsOnBoard(new Position(toPos.row + r, toPos.col + c)))
@@ -232,6 +272,17 @@ namespace project_logic.Moves
                             gameState.setBoardField(new Position(toPos.row + r, toPos.col + c), FieldContent.None);
                             beatedPieces.Add(new BeatedPeace(new Position(toPos.row + r, toPos.col + c), beatedPeaceField));
 
+                            if (localBlockedDir.Any(p => p.Key == (v, h)))
+                            {
+                                List<Position> localBeatedPeaces = localBlockedDir.FirstOrDefault(d => d.Key == (v, h)).Value;
+                                localBeatedPeaces.Add(new Position(toPos.row + r, toPos.col + c));
+                                localBlockedDir[(v, h)] = new List<Position>(localBeatedPeaces);
+                            }
+                            else
+                            {
+                                localBlockedDir.Add((v, h), new List<Position> { new Position(toPos.row + r, toPos.col + c) });
+                            }
+
                             int rr = v;
                             int cc = h;
                             while (true)
@@ -243,8 +294,12 @@ namespace project_logic.Moves
                                     break;
                                 }
 
-                                FindMovesForLadyAlgorithm(fromPos, new Position(toPos.row + r + rr, toPos.col + c + cc), beatedPieces, color);
-
+                                FindMovesForLadyAlgorithm(fromPos,
+                                    new Position(toPos.row + r + rr, toPos.col + c + cc),
+                                    beatedPieces,
+                                    color,
+                                    new Position(-1 * v, -1 * h));
+                                
                                 rr += v;
                                 cc += h;
                             }
@@ -259,25 +314,127 @@ namespace project_logic.Moves
 
             if (beatedPieces.Count > 0)
             {
-                if (isDiagonalLineChecked) 
+                if (isDiagonalLineChecked)
                 {
-                    gameState.setBoardField(
-                    new Position(beatedPieces.Last().pos.row, beatedPieces.Last().pos.col),
-                    beatedPieces.Last().boardField.Content,
-                    beatedPieces.Last().boardField.Player);
+                    int idx = beatedPieces.Count - 1;
 
-                    beatedPieces.RemoveAt(beatedPieces.Count() - 1);
+                    gameState.setBoardField(
+                        new Position(beatedPieces.Last().pos.row, beatedPieces.Last().pos.col),
+                        beatedPieces.Last().boardField.Content,
+                        beatedPieces.Last().boardField.Player);
+
+                    beatedPieces.Remove(beatedPieces.Last());
                 }
                 else
                 {
                     // adding bMove to private variable
                     BMove bMove = new BMove(fromPos, toPos, beatedPieces.Select(b => b.pos).ToList());
                     tempBMoves!.Add(bMove);
+
+                    if (toPos.row == 0 || toPos.row == 7 || toPos.col == 0 || toPos.col == 7)
+                    {
+                        int idx = beatedPieces.Count - 1;
+
+                        gameState.setBoardField(
+                            new Position(beatedPieces.Last().pos.row, beatedPieces.Last().pos.col),
+                            beatedPieces.Last().boardField.Content,
+                            beatedPieces.Last().boardField.Player);
+
+                        beatedPieces.Remove(beatedPieces.Last());
+                    }
                 }
             }
 
             return;
         }
 
+        private List<BMove> AddMissingFieldAfterBeating(BMove bMove)
+        {
+            List<BMove> bMoves = new List<BMove>();
+
+            //TODO
+            return null;
+        }
+
+        private void FindMovesForLadyAlgorithm2(Position fromPos, Position toPos, List<BeatedPeace> beatedPieces, int beatedPiecesCount, Player color, Position? blockedDir = null)
+        {
+            bool isDiagonalLineChecked = false;
+
+            // right up ->   -1, 1
+            // right down -> 1, 1
+            // left up ->    -1, -1
+            // left down ->  1, -1
+            for (int v = -1; v < 2; v += 2)
+            {
+                for (int h = -1; h < 2; h += 2)
+                {
+                    int r = v;
+                    int c = h;
+
+                    if (blockedDir != null && blockedDir.row == v && blockedDir.col == h)
+                    {
+                        continue;
+                    }
+
+                    while (true)
+                    {
+                        if (!gameState.IsOnBoard(new Position(toPos.row + r, toPos.col + c)))
+                        {
+                            break;
+                        }
+
+                        // TODO:
+                        // do naprawy sprawdzenie czy jest możliwe bicie naokolo aktualnej wirtualnej pozycji damki
+
+                        if (gameState.CanPeaceBeatPeace(toPos, new Position(toPos.row + r, toPos.col + c), color, true))
+                        {
+                            BoardField beatedPeaceField = gameState.GetBoardField(new Position(toPos.row + r, toPos.col + c));
+                            gameState.setBoardField(new Position(toPos.row + r, toPos.col + c), FieldContent.None);
+                            beatedPieces.Add(new BeatedPeace(new Position(toPos.row + r, toPos.col + c), beatedPeaceField));
+                            beatedPiecesCount++;
+
+                            int rr = v;
+                            int cc = h;
+                            while (true)
+                            {
+                                if (!gameState.IsOnBoard(new Position(toPos.row + r + rr, toPos.col + c + cc)) ||
+                                    gameState.IsPeaceHere(new Position(toPos.row + r + rr, toPos.col + c + cc)))
+                                {
+                                    isDiagonalLineChecked = true;
+                                    break;
+                                }
+
+                                FindMovesForLadyAlgorithm2(fromPos,
+                                    new Position(toPos.row + r + rr, toPos.col + c + cc),
+                                    beatedPieces,
+                                    beatedPieces.Count,
+                                    color,
+                                    new Position(-1 * v, -1 * h));
+
+                                if (beatedPieces.Count > beatedPiecesCount)
+                                {
+                                    for (int i = beatedPiecesCount; i < beatedPieces.Count; i++)
+                                    {
+                                        gameState.setBoardField(
+                                           new Position(beatedPieces[i].pos.row, beatedPieces[i].pos.col),
+                                           beatedPieces[i].boardField.Content,
+                                           beatedPieces[i].boardField.Player);
+                                    }
+
+                                    beatedPieces.RemoveRange(beatedPiecesCount, beatedPieces.Count - beatedPiecesCount);
+                                }
+
+                                rr += v;
+                                cc += h;
+                            }
+                        }
+
+                        r += v;
+                        c += h;
+                    }
+                }
+            }
+
+        }
     }
 }
