@@ -19,18 +19,18 @@ namespace project_logic
         {
             GameBoard = new BoardField[rows, cols];
 
-            setBoardField(new Position(4, 5), FieldContent.Lady, Player.White);
+            //setBoardField(new Position(6, 3), FieldContent.Lady, Player.White);
 
-            //setBoardField(new Position(3, 4), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(2, 3), FieldContent.Pawn, Player.Black);
             //setBoardField(new Position(1, 4), FieldContent.Pawn, Player.Black);
             //setBoardField(new Position(4, 1), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(1, 6), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(6, 1), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(1, 6), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(6, 1), FieldContent.Pawn, Player.Black);
             //setBoardField(new Position(1, 2), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(5, 4), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(2, 3), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(4, 5), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(1, 4), FieldContent.Pawn, Player.Black);
             //setBoardField(new Position(2, 1), FieldContent.Pawn, Player.Black);
-            setBoardField(new Position(3, 6), FieldContent.Pawn, Player.Black);
+            //setBoardField(new Position(3, 6), FieldContent.Pawn, Player.Black);
 
             for (int r = 0; r < rows; r++)
             {
@@ -51,11 +51,11 @@ namespace project_logic
                     {
                         if (r % 2 != 0 && c % 2 == 0)
                         {
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                         else if (r == 6 && c % 2 != 0)
                         {
-                            //setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
+                            setBoardField(new Position(r, c), FieldContent.Pawn, Player.White);
                         }
                     }
 
