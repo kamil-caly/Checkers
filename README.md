@@ -37,14 +37,14 @@ This is a classic Checkers game implemented in C# using WPF.
 
 ## How it Looks Like
 
+**Game View**
+![image](https://github.com/kamil-caly/Checkers/assets/66841315/5089ecbf-db83-4b0b-b07f-4f21a8c8bb2b)
+
 **Pause Menu**
 ![image](https://github.com/kamil-caly/Checkers/assets/66841315/1ebfeb78-9b6e-4a55-9dc0-1d186e1889fd)
 
 **Game Over Menu**
 ![image](https://github.com/kamil-caly/Checkers/assets/66841315/e6353ec8-1646-4dc2-a84a-d6fcba224c84)
-
-**Game View**
-![image](https://github.com/kamil-caly/Checkers/assets/66841315/5089ecbf-db83-4b0b-b07f-4f21a8c8bb2b)
 
 ## How it was Implemented
 
